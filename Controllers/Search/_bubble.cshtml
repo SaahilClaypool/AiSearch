@@ -1,0 +1,34 @@
+@model MessageState
+
+<div class="message">
+    @if (!Model.Complete)
+    {
+        <div>...</div>
+    }
+    <div>
+        <b>User: @Model.UserInput</b>
+    </div>
+    <div>
+        @if (Model.SearchResults == null)
+        {
+            <partial name="skeleton" />
+        }
+        else
+        {
+            <small>search: <code>@Model.Query</code></small>
+            <details>
+                <summary>@Model.SearchResults.Count Results </summary>
+                @foreach (var r in Model.SearchResults)
+                {
+                    <div class="search-result">
+                        <h4>@r.Title</h4>
+                        <p>@r.Description</p>
+                    </div>
+                }
+            </details>
+        }
+    </div>
+    <div class="llm-output">
+        @Html.Raw(Markdig.Markdown.ToHtml(Model.LLMOutput ?? ""))
+    </div>
+</div>

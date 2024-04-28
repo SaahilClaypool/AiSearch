@@ -1,0 +1,25 @@
+@model ConversationState
+
+@{
+    var prev = Model.Messages[..^1];
+    var cur = Model.Messages[^1];
+    var url = $"/search/conversation?id={Model.Id}";
+    var trigger = cur.Complete ? "none" : $"every 0.2s";
+    var disabled = cur.Complete ? "" : "disabled";
+}
+
+<div hx-ext="morph" hx-get="@url" hx-trigger="@trigger" hx-swap="morph:outerHTML" hx-select="#conversation" id="conversation">
+    <!form action="/search/reply" @(cur.Complete ? "" : "inert") hx-disable="true">
+        <input name="id" type="hidden" value=@Model.Id>
+        <input name="search" placeholder="follow up..." type="search" @disabled>
+    </!form>
+    <partial name="_bubble" model="cur" />
+
+    <hr />
+
+    @foreach (var p in prev)
+    {
+        <partial name="_bubble" model="p" />
+    }
+
+</div>

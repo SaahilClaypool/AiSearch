@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <script src="https://unpkg.com/htmx.org@1.9.12"></script>
+    <script src="https://unpkg.com/idiomorph/dist/idiomorph-ext.min.js"></script>
+
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - MyApp</title>
+    <link rel="stylesheet" href="~/styles.css" asp-append-version="true" />
+</head>
+
+<body>
+    <header>
+        <span></span>
+        <h1>Ai Search</h1>
+        <span>
+            <form action="/search/new">
+                <input name="search" placeholder="new search">
+            </form>
+        </span>
+    </header>
+    <main role="main">
+        @RenderBody()
+    </main>
+</body>
+
+@RenderSection("Scripts", required: false)
+
+</html>
