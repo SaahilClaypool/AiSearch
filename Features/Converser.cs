@@ -80,7 +80,7 @@ public class Converser(
                 """
             );
             message.Query = await GetQuery(message.UserInput, previousContext);
-            message.SearchResults = await searcher.Search(message.UserInput);
+            message.SearchResults = await searcher.Search(message.Query);
             var sb = new StringBuilder();
             var prompt = $"""
             User Query: {message.UserInput}
@@ -106,6 +106,7 @@ public class Converser(
 
     string LLMSearchResult(List<SearchLink> links, string query) =>
         $"""
+        Ignore reuslts that are irrelevant.
         Search Results for {query}:
         ---
         {links.Select(l => $"""

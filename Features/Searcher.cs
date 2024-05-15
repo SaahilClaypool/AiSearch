@@ -18,6 +18,7 @@ public class Searcher(string key)
             ParameterType.RequestBody
         );
         var response = await client.ExecuteAsync(request);
+        Console.WriteLine($"Searched for {query} - received:");
         Console.WriteLine(response.Content);
         var objects = response.Content!.FromJson<SerperTypes.RootObject>()!;
         return objects

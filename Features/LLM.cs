@@ -9,16 +9,19 @@ public interface ILLM
     IAsyncEnumerable<string> Stream(string prompt, string? system = null);
 }
 
-public class Groq(string key) : ILLM
+public class Groq(string key)
+    : OpenAI(key, "https://api.groq.com/openai/{0}/{1}", llama38b)
+{
+    const string llama370b = "llama3-70b-8192";
+    const string llama38b = "llama3-8b-8192";
+}
+
+public class OpenAI(string key, string url, string model) : ILLM
 {
     const string System = """
-        Exclude all introductions and get to the point. For example, don't start by saying "Here is a concise summary".
-        Answer in well formatted markdown.
-        Answer the question concicely.
+        Exclude all introductions. Answer concisely and use well-formatted markdown.
         """;
-    const string llama370b = "llama3-70b-8192";
-    OpenAIAPI oai =
-        new(key) { ApiUrlFormat = "https://api.groq.com/openai/{0}/{1}" };
+    OpenAIAPI oai = new(key) { ApiUrlFormat = url };
 
     public async Task<T?> Complete<T>(string prompt, string? system)
     {
@@ -35,7 +38,7 @@ public class Groq(string key) : ILLM
     ChatRequest Request() =>
         new ChatRequest()
         {
-            Model = "llama3-70b-8192",
+            Model = model,
             ResponseFormat = ChatRequest.ResponseFormats.Text,
             StopSequence = "TERMINATE",
             Temperature = 0.5,
@@ -48,7 +51,7 @@ public class Groq(string key) : ILLM
         Console.WriteLine($"Key is : {key}");
         Console.WriteLine($"Stream: {prompt} {system}");
         var request = Request();
-        request.Model = llama370b;
+        request.Model = model;
         request.Messages ??= [];
         var systemMessage = new ChatMessage
         {
